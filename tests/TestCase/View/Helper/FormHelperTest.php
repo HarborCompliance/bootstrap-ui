@@ -80,8 +80,9 @@ class FormHelperTest extends TestCase
         ];
 
         Security::setSalt('foo!');
-        Router::connect('/:controller', ['action' => 'index']);
-        Router::connect('/:controller/:action/*');
+        $builder = Router::createRouteBuilder('/');
+        $builder->connect('/{controller}', ['action' => 'index']);
+        $builder->connect('/{controller}/{action}/*');
     }
 
     public function tearDown(): void
@@ -359,8 +360,9 @@ class FormHelperTest extends TestCase
                 'type' => 'text',
                 'name' => 'title',
                 'id' => 'title',
-                'class' => 'form-control',
                 'required' => 'required',
+                'aria-invalid' => 'true',
+                'class' => 'form-control',
             ],
             ['div' => ['class' => 'help-block']],
             'error message',
@@ -386,8 +388,9 @@ class FormHelperTest extends TestCase
                 'type' => 'checkbox',
                 'name' => 'published',
                 'id' => 'published',
-                'class' => '',
                 'value' => 1,
+                'aria-invalid' => 'true',
+                'class' => '',
             ]],
             'Published',
             '/label',
@@ -609,6 +612,7 @@ class FormHelperTest extends TestCase
             ['input' => [
                 'type' => 'hidden',
                 'name' => 'published',
+                'id' => 'published',
                 'value' => '',
             ]],
             ['div' => ['class' => 'radio']],
@@ -656,6 +660,7 @@ class FormHelperTest extends TestCase
             ['input' => [
                 'type' => 'hidden',
                 'name' => 'published',
+                'id' => 'published',
                 'value' => '',
             ]],
             ['label' => [
@@ -712,6 +717,7 @@ class FormHelperTest extends TestCase
             'input' => [
                 'type' => 'hidden',
                 'name' => 'published',
+                'id' => 'published',
                 'value' => '',
             ],
             ['div' => ['class' => 'radio']],
@@ -767,6 +773,7 @@ class FormHelperTest extends TestCase
             'input' => [
                 'type' => 'hidden',
                 'name' => 'published',
+                'id' => 'published',
                 'value' => '',
             ],
             ['label' => [
@@ -825,6 +832,7 @@ class FormHelperTest extends TestCase
             ['input' => [
                 'type' => 'hidden',
                 'name' => 'published',
+                'id' => 'published',
                 'value' => '',
             ]],
             ['div' => ['class' => 'radio custom-class']],
@@ -1223,6 +1231,7 @@ class FormHelperTest extends TestCase
             'input' => [
                 'type' => 'hidden',
                 'name' => 'field',
+                'id' => 'field',
                 'value' => '',
             ],
             ['div' => ['class' => 'checkbox']],
@@ -1274,6 +1283,7 @@ class FormHelperTest extends TestCase
             'input' => [
                 'type' => 'hidden',
                 'name' => 'users',
+                'id' => 'users',
                 'value' => '',
             ],
             ['div' => ['class' => 'checkbox']],
@@ -1370,8 +1380,9 @@ class FormHelperTest extends TestCase
                 'type' => 'text',
                 'name' => 'title',
                 'id' => 'title',
-                'class' => 'form-control',
                 'required' => 'required',
+                'aria-invalid' => 'true',
+                'class' => 'form-control',
             ],
             ['div' => ['class' => 'help-block']],
             'error message',
@@ -1396,8 +1407,9 @@ class FormHelperTest extends TestCase
                 'type' => 'text',
                 'name' => 'title',
                 'id' => 'title',
-                'class' => 'form-control',
                 'required' => 'required',
+                'aria-invalid' => 'true',
+                'class' => 'form-control',
             ],
             ['div' => ['class' => 'help-block']],
             'error message',
@@ -1480,8 +1492,9 @@ class FormHelperTest extends TestCase
                 'type' => 'text',
                 'name' => 'title',
                 'id' => 'title',
-                'class' => 'form-control',
                 'required' => 'required',
+                'aria-invalid' => 'true',
+                'class' => 'form-control',
             ],
             ['div' => ['class' => 'help-block']],
             'error message',
@@ -1559,27 +1572,27 @@ class FormHelperTest extends TestCase
     public function testFormControlClassInjection()
     {
         $result = $this->Form->text('foo');
-        $this->assertContains('class="form-control"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
 
         $result = $this->Form->text('foo', ['class' => 'custom']);
-        $this->assertContains('class="custom form-control"', $result);
+        $this->assertStringContainsString('class="custom form-control"', $result);
 
         $result = $this->Form->select('foo');
-        $this->assertContains('class="form-control"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
 
         $result = $this->Form->textarea('foo');
-        $this->assertContains('class="form-control"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
 
         $result = $this->Form->dateTime('foo');
-        $this->assertContains('class="form-control"', $result);
+        $this->assertStringContainsString('class="form-control"', $result);
 
         $result = $this->Form->file('foo');
-        $this->assertNotContains('"form-control"', $result);
+        $this->assertStringNotContainsString('"form-control"', $result);
 
         $result = $this->Form->checkbox('foo');
-        $this->assertNotContains('"form-control"', $result);
+        $this->assertStringNotContainsString('"form-control"', $result);
 
         $result = $this->Form->radio('foo', ['1' => 'Opt 1', '2' => 'Opt 2']);
-        $this->assertNotContains('"form-control"', $result);
+        $this->assertStringNotContainsString('"form-control"', $result);
     }
 }

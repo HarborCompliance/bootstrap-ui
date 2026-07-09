@@ -17,16 +17,23 @@
         }
     ],
     "require": {
-        "cakephp/cakephp": "^4.0"
+        "php": ">=8.1",
+        "cakephp/cakephp": "^5.1"
     },
     "require-dev": {
-        "cakephp/bake": "^2.1",
-        "cakephp/cakephp-codesniffer": "^4.1",
-        "phpunit/phpunit": "^5.7.14|^6.0"
+        "cakephp/bake": "^3.0",
+        "cakephp/cakephp-codesniffer": "^5.1",
+        "phpunit/phpunit": "^10.5.58 || ^11.5.3 || ^12.4"
     },
     "support": {
         "issues": "http://github.com/friendsofcake/bootstrap-ui/issues",
         "source": "http://github.com/friendsofcake/bootstrap-ui"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cakephp/plugin-installer": true
+        }
     },
     "autoload": {
         "psr-4": {

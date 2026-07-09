@@ -10,7 +10,7 @@ class BreadcrumbsHelper extends CoreBreadcrumbsHelper
     /**
      * @inheritDoc
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'templates' => [
             'wrapper' => '<ol{{attrs}}>{{content}}</ol>',
             'item' => '<li{{attrs}}><a href="{{url}}"{{innerAttrs}}>{{title}}</a></li>{{separator}}',

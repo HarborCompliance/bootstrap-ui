@@ -61,7 +61,7 @@ class RadioWidget extends \Cake\View\Widget\RadioWidget
      * @param bool $escape Whether or not to HTML escape the label.
      * @return string Generated label.
      */
-    protected function _renderLabel($radio, $label, $input, $context, $escape)
+    protected function _renderLabel($radio, $label, $input, $context, $escape): string|false
     {
         if ($this->_inline) {
             $label = [

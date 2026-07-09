@@ -5,7 +5,7 @@ use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
-use Cake\I18n\I18n;
+use Cake\TestSuite\Fixture\SchemaLoader;
 
 if (is_file('vendor/autoload.php')) {
     require_once 'vendor/autoload.php';
@@ -47,6 +47,10 @@ define('CONFIG', TEST_APP . 'config' . DS);
 
 require_once CORE_PATH . 'config/bootstrap.php';
 
+// CakePHP 5 no longer autoloads the global function shims (h(), pr(), etc.);
+// real applications load these themselves, so the test harness does the same.
+require_once CAKE . 'Core' . DS . 'functions_global.php';
+
 date_default_timezone_set('UTC');
 mb_internal_encoding('UTF-8');
 
@@ -70,9 +74,9 @@ Configure::write('App', [
 ]);
 
 Cache::setConfig([
-    '_cake_core_' => [
+    '_cake_translations_' => [
         'engine' => 'File',
-        'prefix' => 'cake_core_',
+        'prefix' => 'cake_translations_',
         'serialize' => true
     ],
     '_cake_model_' => [
@@ -88,4 +92,10 @@ if (!getenv('db_dsn')) {
 ConnectionManager::setConfig('test', ['url' => getenv('db_dsn')]);
 
 Plugin::getCollection()->add(new \BootstrapUI\Plugin(['path' => ROOT . DS]));
-Plugin::getCollection()->add(new \Bake\Plugin());
+Plugin::getCollection()->add(new \Bake\BakePlugin());
+
+// Create test database schema from tests/schema.php
+if (getenv('FIXTURE_SCHEMA_METADATA')) {
+    $loader = new SchemaLoader();
+    $loader->loadInternalFile(getenv('FIXTURE_SCHEMA_METADATA'));
+}

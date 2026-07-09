@@ -5,15 +5,16 @@ namespace BootstrapUI\Test\TestCase\View\Helper;
 
 use BootstrapUI\View\Helper\PaginatorHelper;
 use Cake\Core\Configure;
+use Cake\Datasource\Paging\PaginatedResultSet;
 use Cake\Http\ServerRequest;
 use Cake\I18n\I18n;
+use Cake\ORM\ResultSet;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
 
 /**
  * PaginatorHelperTest class
- *
  */
 class PaginatorHelperTest extends TestCase
 {
@@ -52,32 +53,44 @@ class PaginatorHelperTest extends TestCase
                 'pass' => [],
             ],
         ]);
-        $request = $request->withParam('paging', [
-            'Article' => [
-                'page' => 1,
-                'current' => 9,
-                'count' => 62,
-                'prevPage' => false,
-                'nextPage' => true,
-                'pageCount' => 7,
-                'sort' => null,
-                'direction' => null,
-                'limit' => null,
-            ],
-        ]);
 
         $this->View = new View($request);
         $this->Paginator = new PaginatorHelper($this->View);
-        $this->Paginator->Js = $this->getMockBuilder('Cake\View\Helper\PaginatorHelper')
-            ->setConstructorArgs([$this->View])
-            ->getMock();
 
         Configure::write('Routing.prefixes', []);
         Router::reload();
-        Router::connect('/{controller}/{action}/*');
+        $builder = Router::createRouteBuilder('/');
+        $builder->connect('/{controller}/{action}/*');
         Router::setRequest($request);
 
         $this->locale = I18n::getLocale();
+    }
+
+    /**
+     * Sets the paginated result the helper renders from.
+     *
+     * CakePHP 5.1+ reads pagination from a PaginatedInterface set via
+     * `setPaginated()` rather than from the request's `paging` param.
+     *
+     * @param array $params Paging metadata.
+     * @return void
+     */
+    protected function setPaginated(array $params): void
+    {
+        $params += [
+            'alias' => 'Clients',
+            'currentPage' => 1,
+            'count' => 0,
+            'totalCount' => 0,
+            'perPage' => 20,
+            'pageCount' => 1,
+            'hasPrevPage' => false,
+            'hasNextPage' => false,
+            'sort' => null,
+            'direction' => null,
+        ];
+
+        $this->Paginator->setPaginated(new PaginatedResultSet(new ResultSet([]), $params));
     }
 
     /**
@@ -91,7 +104,7 @@ class PaginatorHelperTest extends TestCase
         unset($this->View, $this->Paginator);
 
         I18n::setLocale($this->locale);
-     }
+    }
 
     /**
      * testLinks method
@@ -100,17 +113,14 @@ class PaginatorHelperTest extends TestCase
      */
     public function testLinks()
     {
-        $request = $this->Paginator->getView()->getRequest()->withAttribute('paging', [
-            'Client' => [
-                'page' => 8,
-                'current' => 3,
-                'count' => 30,
-                'prevPage' => false,
-                'nextPage' => 2,
-                'pageCount' => 15,
-            ],
+        $this->setPaginated([
+            'currentPage' => 8,
+            'count' => 3,
+            'totalCount' => 30,
+            'pageCount' => 15,
+            'hasPrevPage' => false,
+            'hasNextPage' => true,
         ]);
-        $this->Paginator->getView()->setRequest($request);
         $result = $this->Paginator->links();
         $expected = [
             'ul' => ['class' => 'pagination'],
@@ -127,17 +137,14 @@ class PaginatorHelperTest extends TestCase
         ];
         $this->assertHtml($expected, $result);
 
-        $request = $this->Paginator->getView()->getRequest()->withParam('paging', [
-            'Client' => [
-                'page' => 8,
-                'current' => 3,
-                'count' => 30,
-                'prevPage' => false,
-                'nextPage' => 2,
-                'pageCount' => 15,
-            ],
+        $this->setPaginated([
+            'currentPage' => 8,
+            'count' => 3,
+            'totalCount' => 30,
+            'pageCount' => 15,
+            'hasPrevPage' => false,
+            'hasNextPage' => true,
         ]);
-        $this->Paginator->getView()->setRequest($request);
         $result = $this->Paginator->links(['prev' => true, 'next' => true]);
         $expected = [
             'ul' => ['class' => 'pagination'],
@@ -156,17 +163,14 @@ class PaginatorHelperTest extends TestCase
         ];
         $this->assertHtml($expected, $result);
 
-        $request = $this->Paginator->getView()->getRequest()->withAttribute('paging', [
-            'Client' => [
-                'page' => 1,
-                'current' => 1,
-                'count' => 2,
-                'prevPage' => false,
-                'nextPage' => 2,
-                'pageCount' => 2,
-            ],
+        $this->setPaginated([
+            'currentPage' => 1,
+            'count' => 1,
+            'totalCount' => 2,
+            'pageCount' => 2,
+            'hasPrevPage' => false,
+            'hasNextPage' => true,
         ]);
-        $this->Paginator->getView()->setRequest($request);
         $result = $this->Paginator->links(['size' => 'lg']);
         $expected = [
             'ul' => ['class' => 'pagination pagination-lg'],

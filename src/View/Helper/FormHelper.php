@@ -239,7 +239,7 @@ class FormHelper extends Helper
                 if (isset($options['multiple']) && $options['multiple'] === 'checkbox') {
                     $options['type'] = 'multicheckbox';
                 } else {
-                    if ($options['label'] !== false && strpos($this->getTemplates('label'), 'class=') === false) {
+                    if ($options['label'] !== false && strpos($this->getTemplate('label'), 'class=') === false) {
                         $options['label'] = $this->injectClasses('control-label', (array)$options['label']);
                     }
                 }
@@ -250,7 +250,7 @@ class FormHelper extends Helper
 
             case 'textarea':
             default:
-                if ($options['label'] !== false && strpos($this->getTemplates('label'), 'class=') === false) {
+                if ($options['label'] !== false && strpos($this->getTemplate('label'), 'class=') === false) {
                     $options['label'] = $this->injectClasses('control-label', (array)$options['label']);
                 }
         }
@@ -359,7 +359,7 @@ class FormHelper extends Helper
      * @param array $options The options for the input element.
      * @return string|array The generated input element.
      */
-    protected function _getInput(string $fieldName, array $options)
+    protected function _getInput(string $fieldName, array $options): array|string
     {
         unset($options['help']);
 

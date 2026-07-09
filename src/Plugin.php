@@ -15,23 +15,23 @@ class Plugin extends BasePlugin
     /**
      * Plugin name.
      *
-     * @var string
+     * @var string|null
      */
-    protected $name = 'BootstrapUI';
+    protected ?string $name = 'BootstrapUI';
 
     /**
      * Do bootstrapping or not
      *
      * @var bool
      */
-    protected $bootstrapEnabled = false;
+    protected bool $bootstrapEnabled = false;
 
     /**
      * Load routes or not
      *
      * @var bool
      */
-    protected $routesEnabled = false;
+    protected bool $routesEnabled = false;
 
     /**
      * @inheritDoc
